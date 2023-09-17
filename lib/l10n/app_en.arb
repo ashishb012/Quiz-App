@@ -1,0 +1,7 @@
+{
+    "app_name" : "Quiz App",
+    "hello" : "home page",
+    "join_quiz" : "Join Quiz with code",
+    "create_quiz" : "Create Quiz",
+    "take_quiz" : "Take Quiz"
+}
