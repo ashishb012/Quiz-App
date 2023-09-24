@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/l10n/l10n_extensions/loc.dart';
+import 'package:quiz/routes/routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -71,7 +72,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 titleAlignment: ListTileTitleAlignment.bottom,
-                // onTap: Navigator.of(context).push(),
+                // onTap: () => Navigator.of(context).push(),
               ),
             ),
             const SizedBox(height: 20),
@@ -84,7 +85,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 titleAlignment: ListTileTitleAlignment.center,
-                // onTap: Navigator.of(context).push(),
+                // onTap: () => Navigator.of(context).push(),
               ),
             ),
             const SizedBox(height: 20),
@@ -97,7 +98,8 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 titleAlignment: ListTileTitleAlignment.bottom,
-                // onTap: Navigator.of(context).push(),
+                onTap: () =>
+                    Navigator.of(context).pushNamed(quizRoute, arguments: 1234),
               ),
             ),
           ],

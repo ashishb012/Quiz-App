@@ -8,6 +8,8 @@ import 'package:quiz/presentation/auth/register_screen.dart';
 import 'package:quiz/presentation/auth/verify_email_screen.dart';
 import 'package:quiz/presentation/helpers/loding_screen.dart';
 import 'package:quiz/presentation/home_page.dart';
+import 'package:quiz/presentation/quiz_screen.dart';
+import 'package:quiz/routes/routes.dart';
 
 import 'package:quiz/services/auth/bloc/auth_bloc.dart';
 import 'package:quiz/services/auth/bloc/auth_event.dart';
@@ -35,9 +37,13 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       home: BlocProvider<AuthBloc>(
-        create: (context) => AuthBloc(FirebaseAuthProvider()),
-        child: const MainPage(),
-      ),
+          create: (context) => AuthBloc(FirebaseAuthProvider()),
+          child:
+              // const MainPage(),
+              const HomePage()),
+      routes: {
+        quizRoute: (context) => const QuizScreen(code: 1234),
+      },
     );
   }
 }
