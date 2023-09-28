@@ -6,9 +6,10 @@ import 'package:quiz/presentation/auth/forgot_password_screen.dart';
 import 'package:quiz/presentation/auth/login_screen.dart';
 import 'package:quiz/presentation/auth/register_screen.dart';
 import 'package:quiz/presentation/auth/verify_email_screen.dart';
+import 'package:quiz/presentation/create_quiz.dart';
 import 'package:quiz/presentation/helpers/loding_screen.dart';
 import 'package:quiz/presentation/home_page.dart';
-import 'package:quiz/presentation/quiz_screen.dart';
+import 'package:quiz/presentation/take_quiz_list.dart';
 import 'package:quiz/routes/routes.dart';
 
 import 'package:quiz/services/auth/bloc/auth_bloc.dart';
@@ -37,12 +38,14 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       home: BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(FirebaseAuthProvider()),
-          child:
-              // const MainPage(),
-              const HomePage()),
+        create: (context) => AuthBloc(FirebaseAuthProvider()),
+        child: const MainPage(),
+        // const HomePage(),
+      ),
       routes: {
-        quizRoute: (context) => const QuizScreen(code: 1234),
+        // quizRoute: (context) => QuizScreen(quiz: null),
+        quizList: (context) => const TakeQuiz(),
+        createQuiz: (context) => const CreateQuiz(),
       },
     );
   }

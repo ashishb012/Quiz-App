@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/l10n/l10n_extensions/loc.dart';
+import 'package:quiz/presentation/quiz_screen.dart';
 import 'package:quiz/routes/routes.dart';
 
 class HomePage extends StatefulWidget {
@@ -72,7 +73,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 titleAlignment: ListTileTitleAlignment.bottom,
-                // onTap: () => Navigator.of(context).push(),
+                // onTap: () => Navigator.of(context).pushNamed(),
               ),
             ),
             const SizedBox(height: 20),
@@ -85,22 +86,24 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 titleAlignment: ListTileTitleAlignment.center,
-                // onTap: () => Navigator.of(context).push(),
+                onTap: () => Navigator.of(context).pushNamed(createQuiz),
+
+                // MaterialPageRoute(
+                //   builder: (context) => const QuizScreen(code: 1234),
+                // ),
               ),
             ),
             const SizedBox(height: 20),
             Card(
               elevation: 10.0,
               child: ListTile(
-                title: Center(
-                  child: Text(
-                    context.loc.take_quiz,
+                  title: Center(
+                    child: Text(
+                      context.loc.take_quiz,
+                    ),
                   ),
-                ),
-                titleAlignment: ListTileTitleAlignment.bottom,
-                onTap: () =>
-                    Navigator.of(context).pushNamed(quizRoute, arguments: 1234),
-              ),
+                  titleAlignment: ListTileTitleAlignment.bottom,
+                  onTap: () => Navigator.of(context).pushNamed(quizList)),
             ),
           ],
         ),
