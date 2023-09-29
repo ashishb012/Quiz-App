@@ -7,10 +7,10 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     background: white,
     // seedColor: purple,
-    primary: orange,
-    secondary: blue,
+    primary: purple,
+    secondary: orange,
   ),
   appBarTheme: const AppBarTheme(
-    backgroundColor: purple,
+    backgroundColor: blue,
   ),
 );

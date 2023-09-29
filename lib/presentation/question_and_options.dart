@@ -66,7 +66,7 @@ class _QuestionAndOptionsState extends State<QuestionAndOptions> {
                             onTap: () {
                               setState(() {
                                 selectedOptions[index] = option.key;
-                                print(selectedOptions);
+                                // print(selectedOptions);
                               });
                             },
                             child: Container(

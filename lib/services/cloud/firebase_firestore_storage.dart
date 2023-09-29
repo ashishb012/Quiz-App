@@ -15,7 +15,7 @@ class FirebaseCloudStorage {
       final querySnapshot =
           await firestore.where("code", isEqualTo: code).get();
       if (querySnapshot.docs.isNotEmpty) {
-        return CloudQuiz.fromSnapshot(querySnapshot.docs.first);
+        return CloudQuiz.fromMap(querySnapshot.docs.first.data());
       } else {
         return null;
       }
@@ -80,57 +80,3 @@ class FirebaseCloudStorage {
   //       (event) => event.docs.map((doc) => CloudQuiz.fromSnapshot(doc)),
   //     );
 }
-
-
-// class FirebaseCloudStorage {
-//   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-//   Future<Quiz> getQuiz(int code) async {
-//     try {
-//       final quizDoc =
-//           await firestore.collection("Quizes").doc(code.toString()).get();
-//       final quizData = quizDoc.data();
-//       final List<Questions> questions = await Future.wait(
-//         quizData!["questions"].map(
-//           (question) async {
-//             final questionsDoc = question.get();
-//             final questionData = questionsDoc.data();
-//             return Questions(
-//               id: questionData["id"],
-//               question: questionData["question"],
-//               options:
-//                   (questionData["options"] as List<dynamic>).cast<String>(),
-//               answerIndex: questionData["answerIndex"],
-//             );
-//           },
-//         ),
-//       );
-//       return Quiz(
-//         code: quizData["code"],
-//         name: quizData["name"],
-//         questions: questions,
-//       );
-//     } catch (e) {
-//       // TODO Custom exceptions;
-//       throw Exception();
-//     }
-//   }
-
-//   Future<void> createQuiz(Quiz quiz) async {
-//     final quizDoc = firestore.collection("Quizes").doc(quiz.code.toString());
-//     final List<Map<String, dynamic>> questionsList =
-//         quiz.questions.map((question) {
-//       return {
-//         'id': question.id,
-//         'question': question.question,
-//         'options': question.options,
-//         'answerIndex': question.answerIndex,
-//       };
-//     }).toList();
-//     await quizDoc.set({
-//       "code": quiz.code,
-//       "name": quiz.name,
-//       "questions": questionsList,
-//     });
-//   }
-// }

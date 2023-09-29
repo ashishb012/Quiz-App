@@ -9,6 +9,7 @@ import 'package:quiz/presentation/auth/verify_email_screen.dart';
 import 'package:quiz/presentation/create_quiz.dart';
 import 'package:quiz/presentation/helpers/loding_screen.dart';
 import 'package:quiz/presentation/home_page.dart';
+import 'package:quiz/presentation/join_quiz_with_code.dart';
 import 'package:quiz/presentation/take_quiz_list.dart';
 import 'package:quiz/routes/routes.dart';
 
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         // quizRoute: (context) => QuizScreen(quiz: null),
         quizList: (context) => const TakeQuiz(),
         createQuiz: (context) => const CreateQuiz(),
+        joinQuiz: (context) => const JoinQuizWithCode(),
       },
     );
   }

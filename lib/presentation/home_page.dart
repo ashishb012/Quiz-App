@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/l10n/l10n_extensions/loc.dart';
-import 'package:quiz/presentation/quiz_screen.dart';
 import 'package:quiz/routes/routes.dart';
 
 class HomePage extends StatefulWidget {
@@ -73,7 +72,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 titleAlignment: ListTileTitleAlignment.bottom,
-                // onTap: () => Navigator.of(context).pushNamed(),
+                onTap: () => Navigator.of(context).pushNamed(joinQuiz),
               ),
             ),
             const SizedBox(height: 20),

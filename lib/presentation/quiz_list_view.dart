@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/presentation/quiz_screen.dart';
-import 'package:quiz/routes/routes.dart';
 import 'package:quiz/services/cloud/cloud_quiz.dart';
 
 class QuizListView extends StatelessWidget {
@@ -11,6 +10,7 @@ class QuizListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: quizzes.length,
       itemBuilder: (context, index) {
         final quiz = quizzes.elementAt(index);

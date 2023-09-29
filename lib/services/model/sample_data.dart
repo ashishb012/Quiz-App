@@ -1,6 +1,3 @@
-// import 'package:quiz/services/model/questions_model.dart';
-// import 'package:quiz/services/model/quiz_model.dart';
-
 import 'package:quiz/services/cloud/cloud_quiz.dart';
 
 List<CloudQuestions> sampleQuestions1 = [
