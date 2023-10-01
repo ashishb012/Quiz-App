@@ -35,16 +35,18 @@ class _JoinQuizWithCodeState extends State<JoinQuizWithCode> {
     final codeText = _quizCode.text;
     if (codeText.isNotEmpty) {
       final int code = int.tryParse(codeText) ?? 0;
-      // if (code) {}
       try {
         quiz = await _cloudStorage.getQuiz(code);
         _jionQuiz(quiz);
       } catch (e) {
-        throw Exception();
+        // throw Exception();
+        _displayError("Invalid quiz code");
       }
     } else {
-      showErrorDailog(context, "Please enter quiz code");
+      _displayError("Please enter quiz code");
     }
+    _quizCode.clear();
+    _dismisKeyboard();
   }
 
   void _jionQuiz(CloudQuiz? quiz) {
@@ -53,8 +55,16 @@ class _JoinQuizWithCodeState extends State<JoinQuizWithCode> {
         builder: (context) => QuizScreen(quiz: quiz),
       ));
     } else {
-      showErrorDailog(context, "Invalid quiz code");
+      _displayError("Invalid quiz code");
     }
+  }
+
+  void _displayError(String errMsg) {
+    showErrorDailog(context, errMsg);
+  }
+
+  void _dismisKeyboard() {
+    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -72,7 +82,7 @@ class _JoinQuizWithCodeState extends State<JoinQuizWithCode> {
             TextField(
               controller: _quizCode,
               keyboardType: TextInputType.number,
-              // autofocus: true,
+              autofocus: true,
               decoration:
                   const InputDecoration(labelText: "Enter the quiz code"),
             ),

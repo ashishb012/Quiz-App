@@ -14,11 +14,11 @@ class FirebaseCloudStorage {
     try {
       final querySnapshot =
           await firestore.where("code", isEqualTo: code).get();
-      if (querySnapshot.docs.isNotEmpty) {
-        return CloudQuiz.fromMap(querySnapshot.docs.first.data());
-      } else {
-        return null;
-      }
+      // if (querySnapshot.docs.isNotEmpty) {
+      return CloudQuiz.fromMap(querySnapshot.docs.first.data());
+      // } else {
+      //   return null;
+      // }
     } catch (e) {
       throw Exception();
     }
