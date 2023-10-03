@@ -72,9 +72,7 @@ class _CreateQuizState extends State<CreateQuiz> {
         _option4Controller.clear();
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Can't add Question with empty fields")),
-      );
+      showErrorDailog(context, "Can't add Question with empty fields");
     }
   }
 
@@ -118,9 +116,9 @@ class _CreateQuizState extends State<CreateQuiz> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -130,21 +128,30 @@ class _CreateQuizState extends State<CreateQuiz> {
                 autofocus: true,
               ),
               const SizedBox(height: 16.0),
-              Card(
-                elevation: 6.0,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: questions.length,
-                  itemBuilder: (context, index) {
-                    final question = questions[index];
-                    return ListTile(
-                      contentPadding: const EdgeInsets.all(10.0),
-                      title: Text(question.question),
-                      subtitle: Text(
-                        'Options: ${question.options} \nAnswer ${question.answerIndex}',
-                      ),
-                    );
-                  },
+              Container(
+                constraints: const BoxConstraints(
+                  minHeight: 0.0,
+                  maxHeight: 300,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0, right: 16.0),
+                  child: Card(
+                    elevation: 6.0,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: questions.length,
+                      itemBuilder: (context, index) {
+                        final question = questions[index];
+                        return ListTile(
+                          contentPadding: const EdgeInsets.all(10.0),
+                          title: Text("Q$index. ${question.question}"),
+                          subtitle: Text(
+                            'Options: ${question.options} \nAnswer ${question.answerIndex + 1}',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -210,6 +217,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                 onPressed: _addQuestion,
                 child: const Text('Add Question'),
               ),
+              const SizedBox(height: 50.0),
               // ElevatedButton(
               //   onPressed: _saveQuiz,
               //   child: const Text('Save Quiz'),

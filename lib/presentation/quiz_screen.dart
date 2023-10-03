@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quiz/presentation/helpers/error_snackbar.dart';
+import 'package:quiz/presentation/result_screen.dart';
 
 import 'package:quiz/services/cloud/firebase_firestore_storage.dart';
 import 'package:quiz/services/cloud/cloud_quiz.dart';
@@ -16,8 +18,9 @@ class _QuizScreenState extends State<QuizScreen> {
   late final FirebaseCloudStorage cloudStorage;
   late final CloudQuiz quiz;
   late final int totalQuestions;
-  late Map<int, int?> selectedOptions = {};
+  late Map<int, int> selectedOptions = {};
   int currentQuestionIndex = 0;
+  DateTime? _lastPressed;
 
   @override
   void initState() {
@@ -28,6 +31,29 @@ class _QuizScreenState extends State<QuizScreen> {
       selectedOptions[i] = -1;
     }
     super.initState();
+  }
+
+  void submitQuiz() {
+    bool notAnswered = false;
+    for (int i = 0; i < totalQuestions; i++) {
+      if (selectedOptions[i] == -1) {
+        notAnswered = true;
+        break;
+      }
+    }
+    if (notAnswered) {
+      showErrorDailog(
+        context,
+        "Please answer all the questions before submitting the quiz",
+      );
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => ResultScreen(
+          selectedOptions: selectedOptions,
+          quiz: quiz,
+        ),
+      ));
+    }
   }
 
   void goToNextQuestion() {
@@ -46,107 +72,121 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+  Future<bool> _onWillPop() {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > const Duration(seconds: 2)) {
+      _lastPressed = now;
+      showErrorDailog(context, 'Press back again to exit.');
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final question = quiz.questions[currentQuestionIndex];
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(quiz.name),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Spacer(),
-          Align(
-            alignment: Alignment.center,
-            child: Card(
-              margin: const EdgeInsets.all(10.0),
-              elevation: 10.0,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        "Q ${currentQuestionIndex + 1}. ${question.question} ",
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(quiz.name),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Spacer(),
+            Align(
+              alignment: Alignment.center,
+              child: Card(
+                margin: const EdgeInsets.all(10.0),
+                elevation: 10.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          "Q ${currentQuestionIndex + 1}. ${question.question} ",
+                        ),
                       ),
-                    ),
-                    Container(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            selectedOptions[currentQuestionIndex] = -1;
-                          });
-                        },
-                        child: const Text("remove selection"),
+                      Container(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedOptions[currentQuestionIndex] = -1;
+                            });
+                          },
+                          child: const Text("remove selection"),
+                        ),
                       ),
-                    ),
-                    Column(
-                      children: question.options
-                          .asMap()
-                          .entries
-                          .map(
-                            (option) => GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedOptions[currentQuestionIndex] =
-                                      option.key;
-                                });
-                              },
-                              child: Container(
-                                color: _selectedColor(
-                                    selectedOptions[currentQuestionIndex],
-                                    option.key),
-                                child: ListTile(
-                                  title: Text(option.value),
+                      Column(
+                        children: question.options
+                            .asMap()
+                            .entries
+                            .map(
+                              (option) => GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedOptions[currentQuestionIndex] =
+                                        option.key;
+                                  });
+                                },
+                                child: Container(
+                                  color: _selectedColor(
+                                      selectedOptions[currentQuestionIndex],
+                                      option.key),
+                                  child: ListTile(
+                                    title: Text(option.value),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ],
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                if (currentQuestionIndex != 0)
-                  ElevatedButton(
-                    onPressed: goToPreviousQuestion,
-                    child: const Text('Previous'),
-                  ),
-                const Spacer(),
-                if (currentQuestionIndex < quiz.questions.length - 1)
-                  ElevatedButton(
-                    onPressed: goToNextQuestion,
-                    child: const Text('Next'),
-                  ),
-              ],
-            ),
-          ),
-          const Spacer(),
-          if (currentQuestionIndex == totalQuestions - 1)
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text("Submit Quiz"),
+              child: Row(
+                children: [
+                  if (currentQuestionIndex != 0)
+                    ElevatedButton(
+                      onPressed: goToPreviousQuestion,
+                      child: const Text('Previous'),
+                    ),
+                  const Spacer(),
+                  if (currentQuestionIndex < quiz.questions.length - 1)
+                    ElevatedButton(
+                      onPressed: goToNextQuestion,
+                      child: const Text('Next'),
+                    ),
+                ],
               ),
             ),
-        ],
-      ),
+            const Spacer(),
+            if (currentQuestionIndex == totalQuestions - 1)
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                  onPressed: () => submitQuiz(),
+                  child: const Text("Submit Quiz"),
+                ),
+              ),
+          ],
+        ),
 
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: const Icon(Icons.done),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        //   child: const Icon(Icons.done),
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
     );
   }
 
